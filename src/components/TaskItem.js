@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import { withStyles, ThemeProvider } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = () => ({
@@ -22,6 +22,9 @@ const styles = () => ({
       color: "black",
     },
   },
+  ifComplited: {
+    textDecoration: "line-through",
+  },
   txt: {
     flex: 5,
   },
@@ -34,19 +37,31 @@ const styles = () => ({
 });
 
 class TaskItem extends React.Component {
+  state = {
+    complited: false,
+  };
+  handleCheck = () => {
+    this.setState({
+      complited: !this.state.complited,
+    });
+  };
   render() {
-    const { classes, text, index, onEdit } = this.props;
+    const { classes, text, index, onEdit, onRemove } = this.props;
     return (
       <div className={classes.taskItem}>
-        <div className={classes.txt}>
+        <div
+          className={`${classes.txt} ${
+            this.state.complited ? classes.ifComplited : ""
+          }`}
+        >
           <span onClick={onEdit}>
             {`${index + 1}. `}
             {text}
           </span>
         </div>
         <Checkbox
-          checked={true}
-          //   onChange={handleChange}
+          checked={this.state.complited}
+          onChange={this.handleCheck}
           inputProps={{ "aria-label": "primary checkbox" }}
         />
         <Button
@@ -61,6 +76,7 @@ class TaskItem extends React.Component {
           variant="contained"
           color="secondary"
           className={classes.removeBtn}
+          onClick={onRemove}
         >
           Remove
         </Button>

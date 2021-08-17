@@ -35,6 +35,15 @@ const styles = () => ({
     paddingTop: 10,
     paddingBottom: 10,
   },
+  complitedTasks: {
+    backgroundColor: "darkblue",
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    width: "90%",
+    borderRadius: 10,
+    textAlign: "center",
+  },
 });
 
 class App extends React.Component {
@@ -76,6 +85,14 @@ class App extends React.Component {
       editedItem,
     });
   };
+  onRemove = (removedTask) => {
+    const updatedTaskList = this.state.taskList.filter(
+      (item) => item.id !== removedTask.id
+    );
+    this.setState({
+      taskList: updatedTaskList,
+    });
+  };
   onClosedDialog = () => {
     this.setState({
       editedItem: null,
@@ -105,6 +122,7 @@ class App extends React.Component {
         text={eachTask.taskBody}
         index={index}
         onEdit={() => this.onEdit(eachTask)}
+        onRemove={() => this.onRemove(eachTask)}
       />
     ));
   };
@@ -127,7 +145,7 @@ class App extends React.Component {
             }}
           />
           <Button
-            variant="outlined"
+            variant="contained"
             color="primary"
             className={classes.btn}
             onClick={this.onAdd}
@@ -143,7 +161,7 @@ class App extends React.Component {
             handleSave={this.handleSave}
           />
         )}
-        <div>{} Tasks complited</div>
+        <div className={classes.complitedTasks}>{} Tasks complited</div>
       </div>
     );
   }
