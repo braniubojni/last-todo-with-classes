@@ -37,31 +37,24 @@ const styles = () => ({
 });
 
 class TaskItem extends React.Component {
-  state = {
-    complited: false,
-  };
-  handleCheck = () => {
-    this.setState({
-      complited: !this.state.complited,
-    });
-  };
   render() {
-    const { classes, text, index, onEdit, onRemove } = this.props;
+    const { classes, data, index, onEdit, onRemove, onCheckChange } =
+      this.props;
     return (
       <div className={classes.taskItem}>
         <div
           className={`${classes.txt} ${
-            this.state.complited ? classes.ifComplited : ""
+            data.complited ? classes.ifComplited : ""
           }`}
         >
           <span onClick={onEdit}>
             {`${index + 1}. `}
-            {text}
+            {data.taskBody}
           </span>
         </div>
         <Checkbox
-          checked={this.state.complited}
-          onChange={this.handleCheck}
+          checked={data.complited}
+          onClick={onCheckChange}
           inputProps={{ "aria-label": "primary checkbox" }}
         />
         <Button

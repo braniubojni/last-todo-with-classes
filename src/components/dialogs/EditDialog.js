@@ -15,6 +15,9 @@ class EditDialog extends React.Component {
       value: evn.target.value,
     });
   };
+  onEnterAdd = (evn) => {
+    if (evn.code === "Enter") this.props.handleSave(this.state.value);
+  };
   render() {
     const { data, handleClose, handleSave } = this.props;
     return (
@@ -34,6 +37,7 @@ class EditDialog extends React.Component {
             label="Name"
             value={this.state.value}
             onChange={this.handleTxtChange}
+            onKeyDown={this.onEnterAdd}
             fullWidth
           />
         </DialogContent>

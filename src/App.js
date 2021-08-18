@@ -59,12 +59,11 @@ class App extends React.Component {
   };
   onAdd = () => {
     const { inputTask, taskList } = this.state;
-
     if (inputTask.trim()) {
       const taskItem = {
         id: uuidv4(),
         taskBody: inputTask.trim(),
-        completed: false,
+        complited: false,
       };
       this.setState({
         taskList: [...taskList, taskItem],
@@ -83,6 +82,20 @@ class App extends React.Component {
     );
     this.setState({
       editedItem,
+    });
+  };
+  onCheckChange = (id) => {
+    const updatedTaskList = this.state.taskList.map((item) => {
+      if (id === item.id) {
+        return {
+          ...item,
+          complited: !item.complited,
+        };
+      }
+      return item;
+    });
+    this.setState({
+      taskList: updatedTaskList,
     });
   };
   onRemove = (removedTask) => {
@@ -119,12 +132,20 @@ class App extends React.Component {
     return taskList.map((eachTask, index) => (
       <TaskItem
         key={eachTask.id}
-        text={eachTask.taskBody}
+        data={eachTask}
         index={index}
+        onCheckChange={() => this.onCheckChange(eachTask.id)}
         onEdit={() => this.onEdit(eachTask)}
         onRemove={() => this.onRemove(eachTask)}
       />
     ));
+  };
+  complitedTasks = () => {
+    return this.state.taskList.reduce((reducer, item) => {
+      if (item.complited) {
+        return (reducer += 1);
+      }
+    }, 0);
   };
   render() {
     const { classes } = this.props;
@@ -161,7 +182,9 @@ class App extends React.Component {
             handleSave={this.handleSave}
           />
         )}
-        <div className={classes.complitedTasks}>{} Tasks complited</div>
+        <div className={classes.complitedTasks}>
+          {this.complitedTasks()} Tasks complited
+        </div>
       </div>
     );
   }
