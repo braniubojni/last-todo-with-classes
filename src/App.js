@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import TaskItem from "./components/TaskItem";
 import { v4 as uuidv4 } from "uuid";
 import EditDialog from "./components/dialogs/EditDialog";
+import AlertDialogSlide from "./components/dialogs/RemoveDialog";
 
 const styles = () => ({
   root: {
@@ -51,6 +52,7 @@ class App extends React.Component {
     inputTask: "",
     taskList: [],
     editedItem: null,
+    removedItem: null,
   };
   handleTaskChange = (e) => {
     this.setState({
@@ -60,6 +62,11 @@ class App extends React.Component {
   onAdd = () => {
     const { inputTask, taskList } = this.state;
     if (inputTask.trim()) {
+      const ifExists = taskList.find((item) => item.taskBody === inputTask);
+      if (!!ifExists) {
+        alert("You already have that task in your list");
+        return;
+      }
       const taskItem = {
         id: uuidv4(),
         taskBody: inputTask.trim(),
@@ -98,12 +105,21 @@ class App extends React.Component {
       taskList: updatedTaskList,
     });
   };
-  onRemove = (removedTask) => {
+  onRemove = (removedItem) => {
+    this.setState({
+      removedItem,
+    });
+  };
+  ifRemoveNo = () => {
+    this.setState({ removedItem: null });
+  };
+  ifRemoveYes = (removedTask) => {
     const updatedTaskList = this.state.taskList.filter(
       (item) => item.id !== removedTask.id
     );
     this.setState({
       taskList: updatedTaskList,
+      removedItem: null,
     });
   };
   onClosedDialog = () => {
@@ -140,16 +156,16 @@ class App extends React.Component {
       />
     ));
   };
-  complitedTasks = () => {
-    return this.state.taskList.reduce((reducer, item) => {
-      if (item.complited) {
-        return (reducer += 1);
-      }
-    }, 0);
-  };
+  // complitedTasks = () => {
+  //   return this.state.taskList.reduce((reducer, item) => {
+  //     if (item.complited) {
+  //       return (reducer += 1);
+  //     }
+  //   }, 0);
+  // };
   render() {
     const { classes } = this.props;
-    const { inputTask, editedItem } = this.state;
+    const { inputTask, editedItem, removedItem } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.txtWithBtn}>
@@ -182,9 +198,16 @@ class App extends React.Component {
             handleSave={this.handleSave}
           />
         )}
-        <div className={classes.complitedTasks}>
+        {!!removedItem && (
+          <AlertDialogSlide
+            ifRemoveYes={this.ifRemoveYes}
+            ifRemoveNo={this.ifRemoveNo}
+            data={removedItem}
+          />
+        )}
+        {/* <div className={classes.complitedTasks}>
           {this.complitedTasks()} Tasks complited
-        </div>
+        </div> */}
       </div>
     );
   }

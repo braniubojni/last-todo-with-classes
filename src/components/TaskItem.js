@@ -24,15 +24,16 @@ const styles = () => ({
   },
   ifComplited: {
     textDecoration: "line-through",
+    color: "#666666",
+  },
+  ifComplitedTaskItem: {
+    backgroundColor: "#cccccc",
+    "&:hover": {
+      backgroundColor: "#cccccc",
+    },
   },
   txt: {
     flex: 5,
-  },
-  doneBtn: {
-    backgroundColor: "green",
-    "&:hover": {
-      backgroundColor: "green",
-    },
   },
 });
 
@@ -41,7 +42,11 @@ class TaskItem extends React.Component {
     const { classes, data, index, onEdit, onRemove, onCheckChange } =
       this.props;
     return (
-      <div className={classes.taskItem}>
+      <div
+        className={`${classes.taskItem} ${
+          data.complited ? classes.ifComplitedTaskItem : ""
+        }`}
+      >
         <div
           className={`${classes.txt} ${
             data.complited ? classes.ifComplited : ""
