@@ -2,6 +2,8 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { green } from "@material-ui/core/colors";
 
 const styles = () => ({
   taskItem: {
@@ -10,7 +12,7 @@ const styles = () => ({
     padding: 10,
     backgroundColor: "#609CE1",
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 15,
     marginTop: 10,
     marginLeft: "5%",
     marginRight: "5%",
@@ -37,6 +39,16 @@ const styles = () => ({
   },
 });
 
+const GreenCheckbox = withStyles({
+  root: {
+    color: green[400],
+    "&$checked": {
+      color: green[600],
+    },
+  },
+  checked: {},
+})((props) => <Checkbox color="default" {...props} />);
+
 class TaskItem extends React.Component {
   render() {
     const { classes, data, index, onEdit, onRemove, onCheckChange } =
@@ -57,10 +69,14 @@ class TaskItem extends React.Component {
             {data.taskBody}
           </span>
         </div>
-        <Checkbox
-          checked={data.complited}
-          onClick={onCheckChange}
-          inputProps={{ "aria-label": "primary checkbox" }}
+        <FormControlLabel
+          control={
+            <GreenCheckbox
+              checked={data.complited}
+              onClick={onCheckChange}
+              name="checkedG"
+            />
+          }
         />
         <Button
           variant="contained"

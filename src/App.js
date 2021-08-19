@@ -53,6 +53,7 @@ class App extends React.Component {
     taskList: [],
     editedItem: null,
     removedItem: null,
+    complitedTasks: { complited: 0, uncomplited: 0 },
   };
   handleTaskChange = (e) => {
     this.setState({
@@ -76,6 +77,7 @@ class App extends React.Component {
         taskList: [...taskList, taskItem],
         inputTask: "",
       });
+      this.ifTaskComplited(taskList);
     }
   };
   onEnterAddTask = (evn) => {
@@ -91,8 +93,27 @@ class App extends React.Component {
       editedItem,
     });
   };
+  ifTaskComplited = (updatedTaskList) => {
+    let counter = 0;
+    let complitedTasks = updatedTaskList.reduce((reducer, item) => {
+      counter++;
+      if (item.complited) {
+        return (reducer += 1);
+      }
+      return reducer;
+    }, 0);
+    this.setState({
+      complitedTasks: {
+        complited: complitedTasks,
+        uncomplited: counter - complitedTasks,
+      },
+    });
+  };
+
+  //
   onCheckChange = (id) => {
-    const updatedTaskList = this.state.taskList.map((item) => {
+    const { taskList } = this.state;
+    const updatedTaskList = taskList.map((item) => {
       if (id === item.id) {
         return {
           ...item,
@@ -101,6 +122,7 @@ class App extends React.Component {
       }
       return item;
     });
+    this.ifTaskComplited(updatedTaskList);
     this.setState({
       taskList: updatedTaskList,
     });
@@ -114,13 +136,16 @@ class App extends React.Component {
     this.setState({ removedItem: null });
   };
   ifRemoveYes = (removedTask) => {
-    const updatedTaskList = this.state.taskList.filter(
+    const { complitedTasks, taskList } = this.state;
+    const updatedTaskList = taskList.filter(
       (item) => item.id !== removedTask.id
     );
+
     this.setState({
       taskList: updatedTaskList,
       removedItem: null,
     });
+    this.ifTaskComplited(updatedTaskList);
   };
   onClosedDialog = () => {
     this.setState({
@@ -156,22 +181,15 @@ class App extends React.Component {
       />
     ));
   };
-  // complitedTasks = () => {
-  //   return this.state.taskList.reduce((reducer, item) => {
-  //     if (item.complited) {
-  //       return (reducer += 1);
-  //     }
-  //   }, 0);
-  // };
   render() {
     const { classes } = this.props;
-    const { inputTask, editedItem, removedItem } = this.state;
+    const { inputTask, editedItem, removedItem, complitedTasks } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.txtWithBtn}>
           <TextField
             className={classes.txt}
-            label="Type your tasks"
+            label="Type your task"
             variant="outlined"
             id="mui-theme-provider-outlined-input"
             value={inputTask}
@@ -205,9 +223,10 @@ class App extends React.Component {
             data={removedItem}
           />
         )}
-        {/* <div className={classes.complitedTasks}>
-          {this.complitedTasks()} Tasks complited
-        </div> */}
+        <div className={classes.complitedTasks}>
+          {`${complitedTasks.complited} / ${complitedTasks.uncomplited}`} Tasks
+          complited
+        </div>
       </div>
     );
   }
