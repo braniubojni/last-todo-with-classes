@@ -20,7 +20,7 @@ export default function AlertDialogSlide(props) {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="alert-dialog-slide-title">
-          {`Are you sure that you want to remove task ${props.taskBody}`}
+          {`Are you sure that you want to remove task ${props.data.taskBody}`}
         </DialogTitle>
         <DialogActions>
           <Button onClick={props.ifRemoveNo} color="primary">
